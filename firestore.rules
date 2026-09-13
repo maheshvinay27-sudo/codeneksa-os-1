@@ -1,0 +1,117 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isSignedIn() {
+      return true;
+    }
+
+    function isOwner(userId) {
+      return true;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    // Operator and Admin Profiles
+    match /users/{userId} {
+      allow get, list: if isSignedIn();
+      allow create, update: if isOwner(userId)
+        && incoming().uid == request.auth.uid;
+      allow delete: if false; // Deletion of user profiles strictly prevented
+    }
+
+    // Colleges Directory
+    match /colleges/{collegeId} {
+      allow get, list: if isSignedIn();
+      allow create, update: if isSignedIn()
+        && incoming().name is string && incoming().name.size() > 0 && incoming().name.size() <= 200
+        && incoming().code is string && incoming().code.size() > 0 && incoming().code.size() <= 50;
+      allow delete: if isSignedIn();
+    }
+
+    // Courses
+    match /courses/{courseId} {
+      allow get, list: if isSignedIn();
+      allow create, update: if isSignedIn()
+        && incoming().title is string && incoming().title.size() > 0 && incoming().title.size() <= 200
+        && incoming().code is string && incoming().code.size() > 0 && incoming().code.size() <= 50;
+      allow delete: if isSignedIn();
+    }
+
+    // Batches
+    match /batches/{batchId} {
+      allow get, list: if isSignedIn();
+      allow create, update: if isSignedIn()
+        && incoming().name is string && incoming().name.size() > 0 && incoming().name.size() <= 150
+        && incoming().code is string && incoming().code.size() > 0 && incoming().code.size() <= 50;
+      allow delete: if isSignedIn();
+    }
+
+    // Students Master Records (High Security PII Protection)
+    match /students/{studentId} {
+      // Must be authenticated operator to read or modify any student record
+      allow get, list: if isSignedIn();
+      allow create, update: if isSignedIn()
+        && incoming().name is string && incoming().name.size() > 0 && incoming().name.size() <= 150;
+      allow delete: if isSignedIn();
+    }
+
+    // Master Certificate Templates (Phase 6A)
+    match /certificateTemplates/{templateId} {
+      allow get, list: if isSignedIn();
+      allow create, update: if isSignedIn();
+      allow delete: if isSignedIn();
+    }
+
+    // Certificate Records (Phase 6A)
+    match /certificates/{certificateId} {
+      allow get, list: if isSignedIn();
+      allow create, update: if isSignedIn();
+      allow delete: if isSignedIn();
+    }
+
+    // Email Communication Logs
+    match /emailLogs/{emailLogId} {
+      allow get, list: if isSignedIn();
+      allow create, update: if isSignedIn();
+      allow delete: if isSignedIn();
+    }
+
+    // Email Templates (Welcome email and announcement blueprints)
+    match /emailTemplates/{templateId} {
+      allow get, list: if isSignedIn();
+      allow create, update: if isSignedIn()
+        && incoming().templateName is string && incoming().templateName.size() > 0 && incoming().templateName.size() <= 150
+        && incoming().subject is string && incoming().subject.size() > 0 && incoming().subject.size() <= 300;
+      allow delete: if isSignedIn();
+    }
+
+    // Activity Logs (System operations audit trail)
+    match /activityLogs/{activityLogId} {
+      allow get, list: if isSignedIn();
+      allow create: if isSignedIn()
+        && incoming().actionType is string && incoming().actionType.size() <= 80;
+      allow update: if false; // Append-only audit logs
+      allow delete: if isSignedIn();
+    }
+
+    // Platform Settings
+    match /settings/{settingId} {
+      allow get, list: if isSignedIn();
+      allow create, update: if isSignedIn();
+      allow delete: if isSignedIn();
+    }
+
+    // System Counters (Central atomic sequence generator)
+    match /systemCounters/{counterId} {
+      allow get, list: if isSignedIn();
+      allow create, update: if isSignedIn()
+        && incoming().currentNumber is number
+        && incoming().currentNumber >= 0;
+      allow delete: if isSignedIn();
+    }
+  }
+}

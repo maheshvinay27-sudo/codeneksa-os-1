@@ -1,0 +1,265 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Internal administrator and staff profile records",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 254 },
+        "displayName": { "type": "string", "maxLength": 120 },
+        "role": { "type": "string", "enum": ["admin", "staff", "operator"] },
+        "photoURL": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "maxLength": 40 },
+        "updatedAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "College": {
+      "title": "College",
+      "description": "Partner colleges and educational institutions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 200 },
+        "code": { "type": "string", "maxLength": 50 },
+        "contactEmail": { "type": "string", "maxLength": 254 },
+        "contactPhone": { "type": "string", "maxLength": 30 },
+        "address": { "type": "string", "maxLength": 300 },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string", "maxLength": 40 },
+        "updatedAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "name", "code", "active"]
+    },
+    "Course": {
+      "title": "Course",
+      "description": "Codeneksa curriculum and training courses",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 200 },
+        "code": { "type": "string", "maxLength": 50 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "durationMonths": { "type": "number" },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string", "maxLength": 40 },
+        "updatedAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "title", "code", "active"]
+    },
+    "Batch": {
+      "title": "Batch",
+      "description": "Academic cohort/batch attached to a course and college",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "batchId": { "type": "string", "maxLength": 80 },
+        "name": { "type": "string", "maxLength": 150 },
+        "code": { "type": "string", "maxLength": 50 },
+        "courseId": { "type": "string", "maxLength": 128 },
+        "courseTitle": { "type": "string", "maxLength": 200 },
+        "collegeId": { "type": "string", "maxLength": 128 },
+        "collegeName": { "type": "string", "maxLength": 200 },
+        "studentCount": { "type": "number" },
+        "sourceFileName": { "type": "string", "maxLength": 255 },
+        "startDate": { "type": "string", "maxLength": 40 },
+        "endDate": { "type": "string", "maxLength": 40 },
+        "status": { "type": "string", "enum": ["upcoming", "ongoing", "completed", "archived"] },
+        "createdAt": { "type": "string", "maxLength": 40 },
+        "updatedAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "name", "code", "status"]
+    },
+    "Student": {
+      "title": "Student",
+      "description": "Core student record for Codeneksa cohorts",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 150 },
+        "hallTicketNumber": { "type": "string", "maxLength": 80 },
+        "college": { "type": "string", "maxLength": 200 },
+        "collegeId": { "type": "string", "maxLength": 128 },
+        "course": { "type": "string", "maxLength": 200 },
+        "courseId": { "type": "string", "maxLength": 128 },
+        "batch": { "type": "string", "maxLength": 150 },
+        "batchId": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 254 },
+        "phone": { "type": "string", "maxLength": 30 },
+        "studentId": { "type": "string", "maxLength": 80 },
+        "tempStudentId": { "type": "string", "maxLength": 80 },
+        "studentIdStatus": { "type": "string", "enum": ["PENDING", "ASSIGNED"] },
+        "studentIdAssignedAt": { "type": "string", "maxLength": 40 },
+        "studentIdAssignedBy": { "type": "string", "maxLength": 128 },
+        "welcomeEmailStatus": { "type": "string", "enum": ["NOT_SENT", "QUEUED", "SENDING", "SENT", "FAILED"] },
+        "welcomeEmailSentAt": { "type": "string", "maxLength": 40 },
+        "welcomeEmailLastAttemptAt": { "type": "string", "maxLength": 40 },
+        "welcomeEmailRetryCount": { "type": "number" },
+        "welcomeEmailError": { "type": "string", "maxLength": 500 },
+        "welcomeEmailMessageId": { "type": "string", "maxLength": 150 },
+        "status": { "type": "string", "enum": ["active", "graduated", "dropped", "pending"] },
+        "createdAt": { "type": "string", "maxLength": 40 },
+        "updatedAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["name", "status"]
+    },
+    "SystemCounter": {
+      "title": "SystemCounter",
+      "description": "Central atomic sequence generators and counters",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 80 },
+        "currentNumber": { "type": "number" },
+        "prefix": { "type": "string", "maxLength": 20 },
+        "padding": { "type": "number" },
+        "lastUpdated": { "type": "string", "maxLength": 40 },
+        "lastBatchId": { "type": "string", "maxLength": 80 }
+      },
+      "required": ["currentNumber", "prefix", "padding"]
+    },
+    "Certificate": {
+      "title": "Certificate",
+      "description": "Issued digital course certificates and credentials",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "studentId": { "type": "string", "maxLength": 128 },
+        "studentName": { "type": "string", "maxLength": 150 },
+        "courseId": { "type": "string", "maxLength": 128 },
+        "courseName": { "type": "string", "maxLength": 200 },
+        "batchId": { "type": "string", "maxLength": 128 },
+        "issueDate": { "type": "string", "maxLength": 40 },
+        "certificateNumber": { "type": "string", "maxLength": 80 },
+        "verificationUrl": { "type": "string", "maxLength": 500 },
+        "status": { "type": "string", "enum": ["draft", "issued", "revoked"] },
+        "createdAt": { "type": "string", "maxLength": 40 },
+        "updatedAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "studentId", "certificateNumber", "status"]
+    },
+    "EmailLog": {
+      "title": "EmailLog",
+      "description": "Log of automated communications dispatched to students",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "studentId": { "type": "string", "maxLength": 80 },
+        "studentDocId": { "type": "string", "maxLength": 128 },
+        "batchId": { "type": "string", "maxLength": 128 },
+        "recipientEmail": { "type": "string", "maxLength": 254 },
+        "recipientName": { "type": "string", "maxLength": 150 },
+        "emailType": { "type": "string", "maxLength": 80 },
+        "templateId": { "type": "string", "maxLength": 128 },
+        "subject": { "type": "string", "maxLength": 300 },
+        "status": { "type": "string", "enum": ["NOT_SENT", "QUEUED", "SENDING", "SENT", "FAILED", "queued", "sent", "failed"] },
+        "providerMessageId": { "type": "string", "maxLength": 150 },
+        "errorCode": { "type": "string", "maxLength": 100 },
+        "errorMessage": { "type": "string", "maxLength": 500 },
+        "retryCount": { "type": "number" },
+        "idempotencyKey": { "type": "string", "maxLength": 200 },
+        "sentAt": { "type": "string", "maxLength": 40 },
+        "failedAt": { "type": "string", "maxLength": 40 },
+        "queuedAt": { "type": "string", "maxLength": 40 },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "triggeredBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "recipientEmail", "status"]
+    },
+    "EmailTemplate": {
+      "title": "EmailTemplate",
+      "description": "Communication templates for welcome emails and announcements",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "templateName": { "type": "string", "maxLength": 150 },
+        "emailType": { "type": "string", "maxLength": 80 },
+        "subject": { "type": "string", "maxLength": 300 },
+        "body": { "type": "string", "maxLength": 10000 },
+        "senderName": { "type": "string", "maxLength": 120 },
+        "senderEmail": { "type": "string", "maxLength": 254 },
+        "replyTo": { "type": "string", "maxLength": 254 },
+        "isDefault": { "type": "boolean" },
+        "createdAt": { "type": "string", "maxLength": 40 },
+        "updatedAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "templateName", "subject", "body"]
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "Audit trail and operational activities performed across the OS",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "actionType": { "type": "string", "maxLength": 80 },
+        "description": { "type": "string", "maxLength": 500 },
+        "performedByUserId": { "type": "string", "maxLength": 128 },
+        "performedByEmail": { "type": "string", "maxLength": 254 },
+        "timestamp": { "type": "string", "maxLength": 40 },
+        "category": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "actionType", "description", "timestamp"]
+    },
+    "Setting": {
+      "title": "Setting",
+      "description": "Platform settings, numbering sequences, and operational parameters",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "key": { "type": "string", "maxLength": 80 },
+        "value": { "type": "string", "maxLength": 1000 },
+        "description": { "type": "string", "maxLength": 300 },
+        "updatedAt": { "type": "string", "maxLength": 40 },
+        "updatedBy": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["id", "key"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "Internal operator and staff accounts"
+    },
+    "/colleges/{collegeId}": {
+      "schema": { "$ref": "#/entities/College" },
+      "description": "Colleges directory"
+    },
+    "/students/{studentId}": {
+      "schema": { "$ref": "#/entities/Student" },
+      "description": "Student master database records"
+    },
+    "/batches/{batchId}": {
+      "schema": { "$ref": "#/entities/Batch" },
+      "description": "Academic cohort batches"
+    },
+    "/courses/{courseId}": {
+      "schema": { "$ref": "#/entities/Course" },
+      "description": "Course curricula definitions"
+    },
+    "/certificates/{certificateId}": {
+      "schema": { "$ref": "#/entities/Certificate" },
+      "description": "Issued digital certificates"
+    },
+    "/emailLogs/{emailLogId}": {
+      "schema": { "$ref": "#/entities/EmailLog" },
+      "description": "Communication dispatch records"
+    },
+    "/emailTemplates/{templateId}": {
+      "schema": { "$ref": "#/entities/EmailTemplate" },
+      "description": "Welcome email and announcement templates"
+    },
+    "/activityLogs/{activityLogId}": {
+      "schema": { "$ref": "#/entities/ActivityLog" },
+      "description": "Operations audit logs"
+    },
+    "/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/Setting" },
+      "description": "Platform global settings"
+    },
+    "/systemCounters/{counterId}": {
+      "schema": { "$ref": "#/entities/SystemCounter" },
+      "description": "Global atomic sequence counters"
+    }
+  }
+}

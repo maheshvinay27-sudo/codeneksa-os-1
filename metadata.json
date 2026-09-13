@@ -1,0 +1,6 @@
+{
+  "name": "Codeneksa OS",
+  "description": "Internal business operations platform for Codeneksa EdTech operations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
